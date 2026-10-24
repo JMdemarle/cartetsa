@@ -1,0 +1,21 @@
+{% extends "adherents/base.html" %}
+{% load static %}
+{% block titre %}Carte des visites{% endblock %}
+{% block extra_head %}<link rel="stylesheet" href="{% static 'vendor/leaflet/leaflet.css' %}">{% endblock %}
+{% block content %}
+<div class="barre">
+  <input type="search" id="recherche" placeholder="Rechercher (nom, identifiant, commune…)" aria-label="Rechercher">
+  <span id="compteur" role="status"></span>
+</div>
+<ul class="legende" aria-label="Légende des couleurs">
+  {% for l in legende %}<li><span class="pastille" style="background:{{ l.hex }}"></span>{{ l.libelle }}</li>{% endfor %}
+</ul>
+<div id="map"
+     data-api="{% url 'api_points' %}"
+     data-tile-url="{{ tile_url }}"
+     data-attribution="{{ tile_attribution }}"></div>
+{% endblock %}
+{% block scripts %}
+<script src="{% static 'vendor/leaflet/leaflet.js' %}"></script>
+<script src="{% static 'js/carte.js' %}"></script>
+{% endblock %}

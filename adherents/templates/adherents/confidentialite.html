@@ -1,0 +1,51 @@
+{% extends "adherents/base.html" %}
+{% block titre %}Politique de confidentialité{% endblock %}
+{% block content %}
+<article class="texte">
+  <h1>Politique de confidentialité</h1>
+  <p><em>Modèle à relire et valider par l'organisme responsable avant mise en ligne.</em></p>
+
+  <h2>Qui est responsable de vos données ?</h2>
+  <p>Le responsable du traitement est <strong>{{ organisme_nom }}</strong>, représenté par son président.
+     Contact pour toute question ou demande : <strong>{{ organisme_contact }}</strong>.</p>
+
+  <h2>Pourquoi vos données sont-elles utilisées ?</h2>
+  <p>Cette application permet aux techniciens sanitaires apicoles (TSA) d'organiser leurs visites
+     dans le cadre du plan sanitaire d'élevage auquel vous adhérez : visualiser sur une carte
+     l'emplacement des adhérents à visiter et les contacter pour fixer un rendez-vous.</p>
+
+  <h2>Quelles données ?</h2>
+  <p>Identifiant d'adhérent, civilité, prénom, nom, adresse (avec complément), téléphone, adresse e-mail,
+     date de dernière visite, années de cotisation, secteur géographique (utilisé uniquement pour limiter
+     les accès des TSA) et coordonnées géographiques déduites de l'adresse.
+     Les autres informations de la base d'origine ne sont pas reprises dans cette application.</p>
+  <p>Ces données proviennent de la base des adhérents gérée dans le logiciel de la FNOSAD, déjà accessible
+     aux TSA. Cette application n'en est qu'une copie de travail, mise à jour régulièrement.</p>
+
+  <h2>Sur quelle base légale ?</h2>
+  <p>[À CONFIRMER par l'organisme : exécution de votre adhésion au plan sanitaire d'élevage et/ou intérêt légitime
+     à organiser les visites sanitaires.]</p>
+
+  <h2>Qui peut voir ces données ?</h2>
+  <p>Uniquement les TSA habilités, avec un compte nominatif, et uniquement pour leur secteur.
+     Les données sont hébergées en France par o2switch (sous-traitant d'hébergement).
+     Elles ne sont ni vendues, ni transmises à des tiers à des fins commerciales.</p>
+  <p>Pour afficher le fond de carte, le navigateur du technicien contacte le fournisseur de tuiles cartographiques
+     (adresse IP et zone affichée). Aucune donnée d'adhérent n'est transmise à ce fournisseur.
+     Les adresses sont converties en coordonnées via le service public de géocodage de l'IGN :
+     seule l'adresse est envoyée, sans nom ni téléphone.</p>
+
+  <h2>Combien de temps ?</h2>
+  <p>Les données sont conservées tant que vous adhérez au plan sanitaire, puis supprimées de cette application
+     lors de la mise à jour suivante. Le journal de connexion technique est conservé 6 mois au plus.</p>
+
+  <h2>Vos droits</h2>
+  <p>Vous pouvez demander l'accès, la rectification, l'effacement ou la limitation de vos données,
+     ou vous opposer à leur traitement, en écrivant à {{ organisme_contact }}.
+     Vous pouvez aussi saisir la CNIL (www.cnil.fr).</p>
+
+  <h2>Cookies</h2>
+  <p>Seuls des cookies techniques indispensables (session de connexion et protection contre les attaques CSRF)
+     sont utilisés. Aucun traceur publicitaire ni outil de mesure d'audience.</p>
+</article>
+{% endblock %}

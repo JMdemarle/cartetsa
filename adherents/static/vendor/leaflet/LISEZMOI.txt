@@ -1,0 +1,13 @@
+Placez ici les fichiers de Leaflet 1.9.x (hébergés par vous, pour qu'aucun CDN ne reçoive
+l'adresse IP des utilisateurs) :
+
+  1. Téléchargez leaflet-1.9.4.zip sur https://leafletjs.com/download.html
+  2. Copiez dans CE dossier :
+       leaflet.js
+       leaflet.css
+       images/   (recommandé ; les symboles colorés n'en ont pas besoin, mais les boutons de zoom/attribution oui)
+
+Résultat attendu :
+  adherents/static/vendor/leaflet/leaflet.js
+  adherents/static/vendor/leaflet/leaflet.css
+  adherents/static/vendor/leaflet/images/...

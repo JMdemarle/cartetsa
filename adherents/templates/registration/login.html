@@ -1,0 +1,13 @@
+{% extends "adherents/base.html" %}
+{% block titre %}Connexion{% endblock %}
+{% block content %}
+<section class="formulaire">
+  <h1>Connexion</h1>
+  <p>Accès réservé aux techniciens sanitaires apicoles habilités.</p>
+  <form method="post">{% csrf_token %}
+    {{ form.as_p }}
+    <input type="hidden" name="next" value="{{ next }}">
+    <button type="submit">Se connecter</button>
+  </form>
+</section>
+{% endblock %}

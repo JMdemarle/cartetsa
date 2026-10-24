@@ -1,0 +1,26 @@
+{% load static %}<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>{% block titre %}Carte{% endblock %} – Plan sanitaire apicole</title>
+  <link rel="stylesheet" href="{% static 'css/app.css' %}">
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+<header class="entete">
+  <a class="logo" href="{% url 'carte' %}">Carte des visites – Plan sanitaire apicole</a>
+  {% if user.is_authenticated %}
+  <nav>
+    <span>{{ user.get_username }}</span>
+    <a href="{% url 'password_change' %}">Mot de passe</a>
+    <form method="post" action="{% url 'logout' %}">{% csrf_token %}<button type="submit">Déconnexion</button></form>
+  </nav>
+  {% endif %}
+</header>
+<main>{% block content %}{% endblock %}</main>
+<footer><a href="{% url 'confidentialite' %}">Politique de confidentialité</a></footer>
+{% block scripts %}{% endblock %}
+</body>
+</html>

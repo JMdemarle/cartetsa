@@ -1,0 +1,19 @@
+* { box-sizing: border-box; }
+body { margin: 0; font-family: system-ui, -apple-system, "Segoe UI", sans-serif; color: #222; background: #f6f6f3; }
+.entete { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: .6rem 1rem; background: #7a5c00; color: #fff; flex-wrap: wrap; }
+.entete a { color: #fff; }
+.logo { font-weight: 600; text-decoration: none; }
+.entete nav { display: flex; align-items: center; gap: .8rem; font-size: .9rem; }
+.entete form { margin: 0; }
+button { cursor: pointer; padding: .4rem .8rem; border: 0; border-radius: 4px; background: #e8b400; color: #222; font-weight: 600; }
+.barre { display: flex; align-items: center; gap: 1rem; padding: .6rem 1rem; }
+.barre input { flex: 1; max-width: 28rem; padding: .45rem .6rem; border: 1px solid #bbb; border-radius: 4px; font-size: 1rem; }
+#map { height: calc(100vh - 9rem); min-height: 380px; width: 100%; }
+.formulaire, .texte { max-width: 38rem; margin: 1.5rem auto; padding: 1rem 1.5rem; background: #fff; border-radius: 6px; }
+.formulaire input { max-width: 100%; padding: .4rem; }
+.formulaire .errorlist { color: #b00020; padding-left: 1rem; }
+footer { padding: .8rem 1rem; font-size: .85rem; }
+.popup p { margin: .2rem 0; }
+.legende { display: flex; flex-wrap: wrap; gap: .4rem 1.2rem; margin: 0; padding: 0 1rem .6rem; list-style: none; font-size: .85rem; }
+.legende li { display: flex; align-items: center; gap: .4rem; }
+.pastille { display: inline-block; width: 14px; height: 14px; border-radius: 50%; border: 2px solid #fff; box-shadow: 0 0 0 1px #888; }
