@@ -3,7 +3,7 @@ import logging
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import PasswordChangeView
-from django.http import JsonResponse
+from django.http import Http404, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.utils import timezone
@@ -11,8 +11,8 @@ from django.views.decorators.cache import never_cache
 from django.views.decorators.http import require_GET
 
 from . import visites
-from .acces import adherents_visibles
-from .models import ProfilTSA
+from .acces import adherents_visibles, tsa_public
+from .models import TSA, ProfilTSA
 
 journal = logging.getLogger("adherents.acces")
 
@@ -69,7 +69,11 @@ def confidentialite(request):
     return render(
         request,
         "adherents/confidentialite.html",
-        {"organisme_nom": settings.ORGANISME_NOM, "organisme_contact": settings.ORGANISME_CONTACT},
+        {
+            "organisme_nom": settings.ORGANISME_NOM,
+            "organisme_contact": settings.ORGANISME_CONTACT,
+            "tsa_public": tsa_public(),
+        },
     )
 
 
@@ -81,3 +85,49 @@ class ChangerMotDePasse(PasswordChangeView):
         reponse = super().form_valid(form)
         ProfilTSA.objects.filter(user=self.request.user).update(doit_changer_mdp=False)
         return reponse
+
+
+def _points_tsa():
+    return [
+        {
+            "prenom": t.prenom,
+            "nom": t.nom,
+            "adresse": t.adresse,
+            "code_postal": t.code_postal,
+            "commune": t.commune,
+            "telephone": t.telephone,
+            "email": t.email,
+            "lat": t.latitude,
+            "lon": t.longitude,
+        }
+        for t in TSA.objects.filter(latitude__isnull=False, longitude__isnull=False)
+    ]
+
+
+@login_required
+@never_cache
+@require_GET
+def api_tsa(request):
+    """Annuaire des TSA, mode protégé (utilisateurs connectés)."""
+    return JsonResponse({"points": _points_tsa()})
+
+
+@never_cache
+@require_GET
+def tsa_publique(request):
+    """Page publique de l'annuaire des TSA (désactivée sauf TSA_PUBLIC=1)."""
+    if not tsa_public():
+        raise Http404
+    return render(
+        request,
+        "adherents/tsa_publique.html",
+        {"tile_url": settings.TILE_URL, "tile_attribution": settings.TILE_ATTRIBUTION},
+    )
+
+
+@never_cache
+@require_GET
+def api_tsa_publique(request):
+    if not tsa_public():
+        raise Http404
+    return JsonResponse({"points": _points_tsa()})

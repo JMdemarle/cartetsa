@@ -5,13 +5,16 @@
 {% block content %}
 <div class="barre">
   <input type="search" id="recherche" placeholder="Rechercher (nom, identifiant, commune…)" aria-label="Rechercher">
+  <label class="case"><input type="checkbox" id="afficher-tsa" checked> Afficher les TSA</label>
   <span id="compteur" role="status"></span>
 </div>
-<ul class="legende" aria-label="Légende des couleurs">
+<ul class="legende" aria-label="Légende">
   {% for l in legende %}<li><span class="pastille" style="background:{{ l.hex }}"></span>{{ l.libelle }}</li>{% endfor %}
+  <li><span class="mini-croix"></span>TSA (technicien sanitaire apicole)</li>
 </ul>
 <div id="map"
      data-api="{% url 'api_points' %}"
+     data-api-tsa="{% url 'api_tsa' %}"
      data-tile-url="{{ tile_url }}"
      data-attribution="{{ tile_attribution }}"></div>
 {% endblock %}

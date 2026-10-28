@@ -6,6 +6,10 @@ from . import views
 urlpatterns = [
     path("", views.carte, name="carte"),
     path("api/points/", views.api_points, name="api_points"),
+    path("api/tsa/", views.api_tsa, name="api_tsa"),
+    path("api/tsa/", views.api_tsa, name="api_tsa_publique"),
+    path("tsa/", views.tsa_publique, name="tsa_publique"),
+   
     path("confidentialite/", views.confidentialite, name="confidentialite"),
     path(
         "connexion/",

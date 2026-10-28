@@ -12,3 +12,10 @@ def adherents_visibles(user):
     if profil.voit_tout:
         return qs
     return qs.filter(secteur__in=profil.secteurs.all())
+
+
+def tsa_public():
+    """Vrai si l'annuaire des TSA est consultable sans connexion (variable TSA_PUBLIC=1)."""
+    import os
+
+    return os.environ.get("TSA_PUBLIC", "0").strip().lower() in {"1", "true", "yes", "oui"}

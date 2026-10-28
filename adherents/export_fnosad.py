@@ -112,3 +112,45 @@ def annees_depuis(texte):
     """« 2026, 2025, 2019 » -> [2026, 2025, 2019] (ordre décroissant, sans doublon)."""
     trouvees = re.findall(r"(?<!\d)(?:19|20)\d{2}(?!\d)", texte or "")
     return sorted({int(a) for a in trouvees}, reverse=True)
+
+
+def lire_csv(texte, colonnes, obligatoires):
+    """Lecture générique d'un CSV.
+
+    colonnes : {cle: (nom_normalise, alias, ...)} ; obligatoires : clés requises.
+    Retourne (lignes, colonnes_manquantes) ; chaque ligne contient aussi "_numero".
+    """
+    premiere = texte.split("\n", 1)[0]
+    delimiteur = ";" if premiere.count(";") >= premiere.count(",") else ","
+    lecteur = csv.reader(io.StringIO(texte, newline=""), delimiter=delimiteur)
+    try:
+        entetes = next(lecteur)
+    except StopIteration:
+        return [], list(obligatoires)
+
+    index = {}
+    for position, nom in enumerate(entetes):
+        index.setdefault(normaliser(nom), position)
+
+    positions = {}
+    for cle, noms in colonnes.items():
+        for nom in noms:
+            if nom in index:
+                positions[cle] = index[nom]
+                break
+
+    manquantes = [c for c in obligatoires if c not in positions]
+    if manquantes:
+        return [], manquantes
+
+    lignes = []
+    for champs in lecteur:
+        if not any(c.strip() for c in champs):
+            continue
+        ligne = {
+            cle: (champs[pos].strip() if pos < len(champs) else "")
+            for cle, pos in positions.items()
+        }
+        ligne["_numero"] = lecteur.line_num
+        lignes.append(ligne)
+    return lignes, []

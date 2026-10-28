@@ -1,6 +1,6 @@
 * { box-sizing: border-box; }
 body { margin: 0; font-family: system-ui, -apple-system, "Segoe UI", sans-serif; color: #222; background: #f6f6f3; }
-.entete { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: .6rem 1rem; background: #7a5c00; color: #fff; flex-wrap: wrap; }
+.entete { padding-top: calc(.6rem + env(safe-area-inset-top, 0px)); display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: .6rem 1rem; background: #7a5c00; color: #fff; flex-wrap: wrap; }
 .entete a { color: #fff; }
 .logo { font-weight: 600; text-decoration: none; }
 .entete nav { display: flex; align-items: center; gap: .8rem; font-size: .9rem; }
@@ -8,12 +8,35 @@ body { margin: 0; font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
 button { cursor: pointer; padding: .4rem .8rem; border: 0; border-radius: 4px; background: #e8b400; color: #222; font-weight: 600; }
 .barre { display: flex; align-items: center; gap: 1rem; padding: .6rem 1rem; }
 .barre input { flex: 1; max-width: 28rem; padding: .45rem .6rem; border: 1px solid #bbb; border-radius: 4px; font-size: 1rem; }
-#map { height: calc(100vh - 9rem); min-height: 380px; width: 100%; }
+#map { height: calc(100vh - 9rem); height: calc(100dvh - 9rem); min-height: 380px; width: 100%; }
 .formulaire, .texte { max-width: 38rem; margin: 1.5rem auto; padding: 1rem 1.5rem; background: #fff; border-radius: 6px; }
 .formulaire input { max-width: 100%; padding: .4rem; }
 .formulaire .errorlist { color: #b00020; padding-left: 1rem; }
-footer { padding: .8rem 1rem; font-size: .85rem; }
+footer { padding: .8rem 1rem calc(.8rem + env(safe-area-inset-bottom, 0px)); font-size: .85rem; }
 .popup p { margin: .2rem 0; }
 .legende { display: flex; flex-wrap: wrap; gap: .4rem 1.2rem; margin: 0; padding: 0 1rem .6rem; list-style: none; font-size: .85rem; }
 .legende li { display: flex; align-items: center; gap: .4rem; }
 .pastille { display: inline-block; width: 14px; height: 14px; border-radius: 50%; border: 2px solid #fff; box-shadow: 0 0 0 1px #888; }
+.barre { flex-wrap: wrap; }
+.proches { padding: .5rem 1rem 1.5rem; }
+.proches h2 { margin: .5rem 0; font-size: 1.1rem; }
+.proches .note { font-size: .85rem; color: #555; margin: 0 0 .5rem; }
+.proches ol { list-style: none; margin: 0; padding: 0; }
+.proche { display: flex; align-items: center; gap: .6rem; width: 100%; padding: .7rem .6rem; margin-bottom: .35rem; text-align: left; background: #fff; border: 1px solid #ddd; border-radius: 6px; font-weight: 400; font-size: 1rem; }
+.proche .pastille { flex: none; }
+button, input, a { touch-action: manipulation; }
+@media (max-width: 700px) {
+  #map { height: 60vh; min-height: 320px; }
+  .entete nav { width: 100%; justify-content: space-between; }
+}
+.case { display: flex; align-items: center; gap: .4rem; font-size: .9rem; white-space: nowrap; }
+.titre-page { margin: 0; font-size: 1.1rem; }
+/* Croix rouge des TSA (dessinée en CSS : aucune image nécessaire) */
+.croix-tsa { filter: drop-shadow(0 0 1.5px #fff) drop-shadow(0 0 1px #fff); }
+.croix-tsa::before, .croix-tsa::after { content: ""; position: absolute; background: #d32f2f; }
+.croix-tsa::before { left: 0; top: 9px; width: 24px; height: 6px; }
+.croix-tsa::after { left: 9px; top: 0; width: 6px; height: 24px; }
+.mini-croix { position: relative; display: inline-block; width: 14px; height: 14px; }
+.mini-croix::before, .mini-croix::after { content: ""; position: absolute; background: #d32f2f; }
+.mini-croix::before { left: 0; top: 5px; width: 14px; height: 4px; }
+.mini-croix::after { left: 5px; top: 0; width: 4px; height: 14px; }

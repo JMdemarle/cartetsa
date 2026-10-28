@@ -1,0 +1,18 @@
+{% extends "adherents/base.html" %}
+{% load static %}
+{% block titre %}Techniciens sanitaires apicoles{% endblock %}
+{% block extra_head %}<link rel="stylesheet" href="{% static 'vendor/leaflet/leaflet.css' %}">{% endblock %}
+{% block content %}
+<div class="barre">
+  <h1 class="titre-page">Techniciens sanitaires apicoles</h1>
+  <span id="compteur" role="status"></span>
+</div>
+<div id="map"
+     data-api-tsa="{% url 'api_tsa_publique' %}"
+     data-tile-url="{{ tile_url }}"
+     data-attribution="{{ tile_attribution }}"></div>
+{% endblock %}
+{% block scripts %}
+<script src="{% static 'vendor/leaflet/leaflet.js' %}"></script>
+<script src="{% static 'js/carte.js' %}"></script>
+{% endblock %}

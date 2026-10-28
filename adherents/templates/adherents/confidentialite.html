@@ -44,6 +44,20 @@
      ou vous opposer à leur traitement, en écrivant à {{ organisme_contact }}.
      Vous pouvez aussi saisir la CNIL (www.cnil.fr).</p>
 
+  <h2>Application installable et position</h2>
+  <p>Le site peut être installé comme application sur un téléphone. L'appareil n'enregistre alors que les fichiers de
+     l'application (styles, scripts, icônes) : <strong>aucune donnée d'adhérent n'est stockée sur l'appareil</strong>,
+     et la carte n'est pas consultable sans connexion.</p>
+  <p>La fonction « Autour de moi » demande l'autorisation d'utiliser la position de l'appareil pour classer les
+     adhérents par distance. Cette position est utilisée uniquement dans le navigateur et n'est jamais envoyée
+     au serveur.</p>
+
+  <h2>Techniciens sanitaires apicoles (TSA)</h2>
+  <p>L'annuaire des TSA présente leur nom, prénom, téléphone, adresse e-mail et adresse.
+     {% if tsa_public %}Il est consultable publiquement, sans connexion.{% else %}Il n'est visible que des utilisateurs connectés.{% endif %}
+     Ces informations permettent de joindre le TSA concerné.
+     Les TSA peuvent exercer leurs droits (accès, rectification, effacement) auprès de {{ organisme_contact }}.</p>
+
   <h2>Cookies</h2>
   <p>Seuls des cookies techniques indispensables (session de connexion et protection contre les attaques CSRF)
      sont utilisés. Aucun traceur publicitaire ni outil de mesure d'audience.</p>

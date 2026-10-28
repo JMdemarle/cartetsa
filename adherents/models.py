@@ -70,3 +70,35 @@ class ProfilTSA(models.Model):
 
     def __str__(self):
         return f"Profil de {self.user}"
+
+
+class TSA(models.Model):
+    """Technicien sanitaire apicole : affiché sur la carte par une croix rouge."""
+
+    nom = models.CharField("nom", max_length=150)
+    prenom = models.CharField("prénom", max_length=100, blank=True)
+    telephone = models.CharField("téléphone", max_length=30, blank=True)
+    email = models.EmailField("e-mail", blank=True)
+    adresse = models.CharField("adresse", max_length=255)
+    code_postal = models.CharField("code postal", max_length=10, blank=True)
+    commune = models.CharField("commune", max_length=100, blank=True)
+    latitude = models.FloatField(null=True, blank=True)
+    longitude = models.FloatField(null=True, blank=True)
+    cree_le = models.DateTimeField(auto_now_add=True)
+    modifie_le = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ["nom", "prenom"]
+        verbose_name = "TSA"
+        verbose_name_plural = "TSA"
+
+    def __str__(self):
+        return self.nom_complet
+
+    @property
+    def nom_complet(self):
+        return " ".join(p for p in (self.prenom, self.nom) if p)
+
+    @property
+    def adresse_geocodage(self):
+        return " ".join(p for p in (self.adresse, self.code_postal, self.commune) if p)

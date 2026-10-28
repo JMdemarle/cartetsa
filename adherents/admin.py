@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.admin import UserAdmin  # importe aussi l'admin des utilisateurs
 
 from .geocodage import geocoder
-from .models import Adherent, ProfilTSA, Secteur
+from .models import TSA, Adherent, ProfilTSA, Secteur
 
 User = get_user_model()
 
@@ -28,12 +28,8 @@ class LocaliseFilter(admin.SimpleListFilter):
         return queryset
 
 
-@admin.register(Adherent)
-class AdherentAdmin(admin.ModelAdmin):
-    list_display = ("nom_complet", "identifiant", "telephone", "commune", "derniere_visite", "secteur", "localise")
-    list_filter = ("secteur", "derniere_visite", LocaliseFilter)
-    search_fields = ("nom", "prenom", "identifiant", "adresse", "commune", "telephone", "email")
-    actions = ["geocoder_selection"]
+class GeocodageMixin:
+    """Géocode automatiquement à l'enregistrement si l'adresse change (adresse seule envoyée)."""
 
     @admin.display(boolean=True, description="Localisé")
     def localise(self, obj):
@@ -52,15 +48,31 @@ class AdherentAdmin(admin.ModelAdmin):
     @admin.action(description="Géocoder les adresses sélectionnées")
     def geocoder_selection(self, request, queryset):
         reussis = 0
-        for adherent in queryset:
-            resultat = geocoder(adherent.adresse_geocodage)
+        for objet in queryset:
+            resultat = geocoder(objet.adresse_geocodage)
             if resultat:
-                adherent.latitude, adherent.longitude = resultat[0], resultat[1]
-                adherent.save(update_fields=["latitude", "longitude", "modifie_le"])
+                objet.latitude, objet.longitude = resultat[0], resultat[1]
+                objet.save(update_fields=["latitude", "longitude", "modifie_le"])
                 reussis += 1
         self.message_user(
             request, f"{reussis} adresse(s) géocodée(s) sur {queryset.count()}.", messages.INFO
         )
+
+
+@admin.register(Adherent)
+class AdherentAdmin(GeocodageMixin, admin.ModelAdmin):
+    list_display = ("nom_complet", "identifiant", "telephone", "commune", "derniere_visite", "secteur", "localise")
+    list_filter = ("secteur", "derniere_visite", LocaliseFilter)
+    search_fields = ("nom", "prenom", "identifiant", "adresse", "commune", "telephone", "email")
+    actions = ["geocoder_selection"]
+
+
+@admin.register(TSA)
+class TSAAdmin(GeocodageMixin, admin.ModelAdmin):
+    list_display = ("nom_complet", "telephone", "email", "commune", "localise")
+    list_filter = (LocaliseFilter,)
+    search_fields = ("nom", "prenom", "adresse", "commune", "telephone", "email")
+    actions = ["geocoder_selection"]
 
 
 class ProfilTSAInline(admin.StackedInline):
