@@ -54,30 +54,30 @@ class Command(BaseCommand):
 
         for ligne in lignes:
             numero = ligne["_numero"]
-            if not ligne["adresse"] or not (ligne["nom"] or ligne["prenom"]):
+            if not ligne.get("adresse", "") or not (ligne.get("nom", "") or ligne.get("prenom", "")):
                 self.stderr.write(f"Ligne {numero} ignorée (adresse ou nom vide).")
                 continue
-            annees = annees_depuis(ligne["annees_cotisation"])
+            annees = annees_depuis(ligne.get("annees_cotisation", ""))
             if not annees_voulues & set(annees):
                 exclus += 1
                 continue
             try:
-                derniere_visite = lire_date(ligne["derniere_visite"])
+                derniere_visite = lire_date(ligne.get("derniere_visite", ""))
             except ValueError as erreur:
                 self.stderr.write(f"Ligne {numero} : {erreur} (importée sans date de visite).")
                 derniere_visite = None
 
             adherent = Adherent(
-                identifiant=ligne["identifiant"],
-                civilite=ligne["civilite"],
-                prenom=ligne["prenom"],
-                nom=ligne["nom"],
-                adresse=ligne["adresse"],
-                complement_adresse=ligne["complement"],
-                code_postal=ligne["code_postal"],
-                commune=ligne["commune"],
-                telephone=ligne["telephone"],
-                email=ligne["email"],
+                identifiant=ligne.get("identifiant", ""),
+                civilite=ligne.get("civilite", ""),
+                prenom=ligne.get("prenom", ""),
+                nom=ligne.get("nom", ""),
+                adresse=ligne.get("adresse", ""),
+                complement_adresse=ligne.get("complement", ""),
+                code_postal=ligne.get("code_postal", ""),
+                commune=ligne.get("commune", ""),
+                telephone=ligne.get("telephone", ""),
+                email=ligne.get("email", ""),
                 derniere_visite=derniere_visite,
                 annees_cotisation=", ".join(str(a) for a in annees),
             )

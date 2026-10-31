@@ -20,6 +20,9 @@ class ChangementMotDePasseMiddleware:
                     reverse("password_change"),
                     reverse("password_change_done"),
                     reverse("logout"),
+                    reverse("manifest"),
+                    reverse("service_worker"),
+                    reverse("hors_ligne"),
                 }
                 static = "/" + settings.STATIC_URL.strip("/") + "/"
                 if request.path not in autorises and not request.path.startswith(static):
@@ -53,5 +56,5 @@ class EnTetesSecuriteMiddleware:
         reponse = self.get_response(request)
         if not request.path.startswith(self.prefixe_admin):
             reponse.headers.setdefault("Content-Security-Policy", self.csp)
-        reponse.headers.setdefault("Permissions-Policy", "geolocation=(), camera=(), microphone=()")
+        reponse.headers.setdefault("Permissions-Policy", "geolocation=(self), camera=(), microphone=()")
         return reponse

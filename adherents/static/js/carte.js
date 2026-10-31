@@ -2,9 +2,13 @@
   "use strict";
 
   var el = document.getElementById("map");
-  var champRecherche = document.getElementById("recherche");  // absent sur la page publique
+  var champRecherche = document.getElementById("recherche");  // absent sur la page publique des TSA
   var compteur = document.getElementById("compteur");
   var caseTsa = document.getElementById("afficher-tsa");
+  var boutonAutour = document.getElementById("autour");
+  var blocProches = document.getElementById("proches");
+  var listeProches = document.getElementById("liste-proches");
+  var positionMarqueur = null;
   var nonLocalises = 0;
   var nbTsa = 0;
 
@@ -139,6 +143,7 @@
         }).bindPopup(contenuPopup(pt));
         marqueurs.push({
           marqueur: marqueur,
+          pt: pt,
           texte: [titre(pt), pt.identifiant, pt.adresse, pt.commune].join(" ").toLowerCase()
         });
         bornesAdherents.push([pt.lat, pt.lon]);
@@ -171,6 +176,73 @@
       carte.fitBounds(bornes, { padding: [30, 30], maxZoom: 14 });
     }
   });
+
+  // --- « Autour de moi » : la position est utilisée uniquement dans le navigateur ---
+  function distanceKm(lat1, lon1, lat2, lon2) {
+    var rad = Math.PI / 180;
+    var dLat = (lat2 - lat1) * rad;
+    var dLon = (lon2 - lon1) * rad;
+    var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(lat1 * rad) * Math.cos(lat2 * rad) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    return 6371 * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  }
+
+  function afficherProches(proches) {
+    listeProches.textContent = "";
+    proches.forEach(function (p) {
+      var li = document.createElement("li");
+      var bouton = document.createElement("button");
+      bouton.type = "button";
+      bouton.className = "proche";
+      var pastille = document.createElement("span");
+      pastille.className = "pastille";
+      pastille.style.background = p.m.pt.couleur;
+      var texte = document.createElement("span");
+      texte.textContent = titre(p.m.pt) + " – " + p.m.pt.commune + " – " +
+        p.d.toFixed(1).replace(".", ",") + " km";
+      bouton.appendChild(pastille);
+      bouton.appendChild(texte);
+      bouton.addEventListener("click", function () {
+        groupe.addLayer(p.m.marqueur);
+        carte.setView([p.m.pt.lat, p.m.pt.lon], 16);
+        p.m.marqueur.openPopup();
+        el.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+      li.appendChild(bouton);
+      listeProches.appendChild(li);
+    });
+    blocProches.hidden = false;
+  }
+
+  if (boutonAutour) {
+    boutonAutour.addEventListener("click", function () {
+      if (!navigator.geolocation) {
+        compteur.textContent = "Géolocalisation indisponible sur cet appareil.";
+        return;
+      }
+      compteur.textContent = "Recherche de votre position…";
+      navigator.geolocation.getCurrentPosition(function (pos) {
+        var lat = pos.coords.latitude;
+        var lon = pos.coords.longitude;
+        if (positionMarqueur) { carte.removeLayer(positionMarqueur); }
+        positionMarqueur = L.circleMarker([lat, lon], {
+          radius: 7, color: "#ffffff", weight: 2, fillColor: "#1976d2", fillOpacity: 1
+        }).addTo(carte).bindTooltip("Vous êtes ici");
+        var proches = marqueurs
+          .map(function (m) { return { m: m, d: distanceKm(lat, lon, m.pt.lat, m.pt.lon) }; })
+          .sort(function (a, b) { return a.d - b.d; })
+          .slice(0, 10);
+        afficherProches(proches);
+        var bornes = [[lat, lon]].concat(proches.slice(0, 5).map(function (p) {
+          return [p.m.pt.lat, p.m.pt.lon];
+        }));
+        carte.fitBounds(bornes, { padding: [30, 30], maxZoom: 14 });
+        afficher(champRecherche ? champRecherche.value.trim().toLowerCase() : "");
+      }, function () {
+        compteur.textContent = "Position indisponible (autorisation refusée ?).";
+      }, { enableHighAccuracy: true, timeout: 15000, maximumAge: 60000 });
+    });
+  }
 
   if (champRecherche) {
     champRecherche.addEventListener("input", function () {

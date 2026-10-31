@@ -1,0 +1,39 @@
+{% extends "adherents/base.html" %}
+{% load static %}
+{% block titre %}Données des adhérents{% endblock %}
+{% block content %}
+<section class="formulaire large">
+  <h1>Données des adhérents</h1>
+  <p><a href="{% url 'carte' %}">← Retour à la carte</a></p>
+
+  {% if messages %}
+  <ul class="messages" role="status">
+    {% for m in messages %}<li class="{{ m.tags }}">{{ m }}</li>{% endfor %}
+  </ul>
+  {% endif %}
+
+  <h2>Télécharger la liste</h2>
+  <p>{{ total }} adhérent(s) actuellement dans la base. Fichier CSV (séparateur « ; », encodage UTF-8, lisible dans Excel),
+     avec les mêmes colonnes que l'import.</p>
+  <p class="note"><strong>Données personnelles</strong> : conservez ce fichier dans un emplacement sécurisé et supprimez-le
+     après usage. Chaque téléchargement est enregistré dans le journal.</p>
+  <p><a class="bouton" href="{% url 'donnees_export' %}">Télécharger la liste (CSV)</a></p>
+
+  <h2>Mettre à jour la base depuis l'export FNOSAD</h2>
+  <form method="post" enctype="multipart/form-data" id="form-import">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    {{ form.as_p }}
+    <button type="submit">Importer</button>
+  </form>
+  <p class="note">Seules les colonnes utiles sont lues ; les autres ne sont jamais enregistrées. Les positions déjà connues
+     sont conservées quand l'adresse n'a pas changé. Supprimez le fichier d'export de votre ordinateur après l'import.</p>
+
+  <h2>Localisation des adresses</h2>
+  <p id="etat-geocodage" data-url="{% url 'donnees_geocoder' %}">
+    {% if a_localiser %}{{ a_localiser }} adresse(s) sans position sur la carte.{% else %}Toutes les adresses sont localisées.{% endif %}
+  </p>
+  <button type="button" id="lancer-geocodage"{% if not a_localiser %} hidden{% endif %}>Localiser les adresses</button>
+</section>
+{% endblock %}
+{% block scripts %}<script src="{% static 'js/donnees.js' %}"></script>{% endblock %}

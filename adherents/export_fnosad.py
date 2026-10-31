@@ -154,3 +154,17 @@ def lire_csv(texte, colonnes, obligatoires):
         ligne["_numero"] = lecteur.line_num
         lignes.append(ligne)
     return lignes, []
+
+
+_NOMBRE = re.compile(r"^[+\-]?[\d\s().\-]+$")
+
+
+def securiser_csv(valeur):
+    """Neutralise les cellules interprétées comme des formules par Excel/LibreOffice.
+
+    Les numéros comme « +33 6 12 34 56 78 » restent inchangés.
+    """
+    texte = "" if valeur is None else str(valeur)
+    if texte and (texte[0] in "=@\t\r" or (texte[0] in "+-" and not _NOMBRE.match(texte))):
+        return "'" + texte
+    return texte

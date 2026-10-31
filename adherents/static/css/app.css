@@ -40,3 +40,11 @@ button, input, a { touch-action: manipulation; }
 .mini-croix::before, .mini-croix::after { content: ""; position: absolute; background: #d32f2f; }
 .mini-croix::before { left: 0; top: 5px; width: 14px; height: 4px; }
 .mini-croix::after { left: 5px; top: 0; width: 4px; height: 14px; }
+.bouton { display: inline-block; padding: .4rem .8rem; border-radius: 4px; background: #e8b400; color: #222; font-weight: 600; text-decoration: none; }
+.formulaire.large { max-width: 48rem; }
+.formulaire .note { font-size: .85rem; color: #555; }
+.formulaire ul { padding-left: 0; list-style: none; }
+.messages { padding: 0; margin: .5rem 0 1rem; list-style: none; }
+.messages li { padding: .5rem .8rem; margin-bottom: .4rem; border-radius: 4px; background: #eef; }
+.messages li.success { background: #e3f4e3; }
+.messages li.warning { background: #fff3d6; }

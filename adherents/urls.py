@@ -1,7 +1,7 @@
 from django.contrib.auth import views as auth_views
 from django.urls import path
 
-from . import views
+from . import pwa, views, views_donnees
 
 urlpatterns = [
     path("", views.carte, name="carte"),
@@ -10,7 +10,14 @@ urlpatterns = [
     path("api/tsa/", views.api_tsa, name="api_tsa"),
     path("tsa/", views.tsa_publique, name="tsa_publique"),
     path("api/tsa-public/", views.api_tsa_publique, name="api_tsa_publique"),
-   
+
+    path("donnees/", views_donnees.donnees, name="donnees"),
+    path("donnees/export.csv", views_donnees.export_csv, name="donnees_export"),
+    path("donnees/geocoder/", views_donnees.geocoder_lot, name="donnees_geocoder"),
+    path("manifest.webmanifest", pwa.manifest, name="manifest"),
+    path("sw.js", pwa.service_worker, name="service_worker"),
+    path("hors-ligne/", pwa.hors_ligne, name="hors_ligne"),   
+    
     path("confidentialite/", views.confidentialite, name="confidentialite"),
     path(
         "connexion/",

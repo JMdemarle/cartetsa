@@ -5,7 +5,9 @@
 {% block content %}
 <div class="barre">
   <input type="search" id="recherche" placeholder="Rechercher (nom, identifiant, commune…)" aria-label="Rechercher">
+  <button type="button" id="autour">Autour de moi</button>
   <label class="case"><input type="checkbox" id="afficher-tsa" checked> Afficher les TSA</label>
+  {% if user.is_staff %}<a class="bouton" href="{% url 'donnees' %}">Données : télécharger / mettre à jour</a>{% endif %}
   <span id="compteur" role="status"></span>
 </div>
 <ul class="legende" aria-label="Légende">
@@ -17,6 +19,11 @@
      data-api-tsa="{% url 'api_tsa' %}"
      data-tile-url="{{ tile_url }}"
      data-attribution="{{ tile_attribution }}"></div>
+<section id="proches" class="proches" hidden>
+  <h2>Les plus proches</h2>
+  <p class="note">Distances à vol d'oiseau. Votre position reste sur votre appareil : elle n'est jamais envoyée au serveur.</p>
+  <ol id="liste-proches"></ol>
+</section>
 {% endblock %}
 {% block scripts %}
 <script src="{% static 'vendor/leaflet/leaflet.js' %}"></script>
