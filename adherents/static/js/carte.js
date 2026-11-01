@@ -71,6 +71,42 @@
     return [pt.civilite, pt.prenom, pt.nom].filter(Boolean).join(" ");
   }
 
+  // « Itinéraire » : ouvre Waze ou Google Maps (et Plans sur iPhone/iPad) vers l'adhérent.
+  // Seules les coordonnées sont transmises, uniquement au clic sur le lien choisi.
+  function liensItineraire(lat, lon) {
+    var la = Number(lat).toFixed(6);
+    var lo = Number(lon).toFixed(6);
+    var ua = navigator.userAgent || "";
+    var ios = /iPad|iPhone|iPod/.test(ua) ||
+      (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+    var liens = [
+      { libelle: "Waze", url: "https://waze.com/ul?ll=" + la + "," + lo + "&navigate=yes" },
+      { libelle: "Google Maps", url: "https://www.google.com/maps/dir/?api=1&destination=" + la + "," + lo + "&travelmode=driving" }
+    ];
+    if (ios) {
+      liens.push({ libelle: "Plans", url: "https://maps.apple.com/?daddr=" + la + "," + lo + "&dirflg=d" });
+    }
+    return liens;
+  }
+
+  function boutonItineraire(pt) {
+    var p = document.createElement("p");
+    p.className = "itineraire-liens";
+    var etiquette = document.createElement("span");
+    etiquette.textContent = "Itinéraire :";
+    p.appendChild(etiquette);
+    liensItineraire(pt.lat, pt.lon).forEach(function (l) {
+      var a = document.createElement("a");
+      a.className = "itineraire";
+      a.href = l.url;
+      a.target = "_blank";
+      a.rel = "noopener noreferrer";
+      a.textContent = l.libelle;
+      p.appendChild(a);
+    });
+    return p;
+  }
+
   function contenuPopup(pt) {
     var boite = document.createElement("div");
     boite.className = "popup";
@@ -82,6 +118,7 @@
     contacts(boite, pt);
     ajouter(boite, "Dernière visite : " + (pt.derniere_visite || "aucune"), false);
     if (pt.annees_cotisation) { ajouter(boite, "Cotisations : " + pt.annees_cotisation, false); }
+    boite.appendChild(boutonItineraire(pt));
     return boite;
   }
 
